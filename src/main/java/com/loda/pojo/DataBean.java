@@ -69,6 +69,39 @@ public class DataBean {
     public DataBean() {
     }
 
+    public DataBean(String id, String deviceId, String guid, String account, String appId, String appVersion, String carrier, String deviceType, String eventId, String ip, Double latitude, Double longitude, String netType, String osName, String osVersion, String releaseChannel, String resolution, String sessionId, Long timestamp, String newSessionId, String country, String province, String city, String region, String date, String hour, HashMap<String, Object> properties, Long lastUpdate, int isNew, int isN) {
+        this.id = id;
+        this.deviceId = deviceId;
+        this.guid = guid;
+        this.account = account;
+        this.appId = appId;
+        this.appVersion = appVersion;
+        this.carrier = carrier;
+        this.deviceType = deviceType;
+        this.eventId = eventId;
+        this.ip = ip;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.netType = netType;
+        this.osName = osName;
+        this.osVersion = osVersion;
+        this.releaseChannel = releaseChannel;
+        this.resolution = resolution;
+        this.sessionId = sessionId;
+        this.timestamp = timestamp;
+        this.newSessionId = newSessionId;
+        this.country = country;
+        this.province = province;
+        this.city = city;
+        this.region = region;
+        this.date = date;
+        this.hour = hour;
+        this.properties = properties;
+        this.lastUpdate = lastUpdate;
+        this.isNew = isNew;
+        this.isN = isN;
+    }
+
 
     public String getId() {
         return id;
@@ -310,36 +343,36 @@ public class DataBean {
         this.hour = hour;
     }
 
-    @Override
     public String toString() {
-        return "DataBean{" +
-                "id=" + id +
-                ", deviceId='" + deviceId + '\'' +
-                ", guid='" + guid + '\'' +
-                ", account='" + account + '\'' +
-                ", appId='" + appId + '\'' +
-                ", appVersion='" + appVersion + '\'' +
-                ", carrier='" + carrier + '\'' +
-                ", deviceType='" + deviceType + '\'' +
-                ", eventId='" + eventId + '\'' +
-                ", ip='" + ip + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", netType='" + netType + '\'' +
-                ", osName='" + osName + '\'' +
-                ", osVersion='" + osVersion + '\'' +
-                ", releaseChannel='" + releaseChannel + '\'' +
-                ", resolution='" + resolution + '\'' +
-                ", sessionId='" + sessionId + '\'' +
-                ", timestamp=" + timestamp +
-                ", newSessionId='" + newSessionId + '\'' +
-                ", country='" + country + '\'' +
-                ", province='" + province + '\'' +
-                ", city='" + city + '\'' +
-                ", region='" + region + '\'' +
-                ", properties=" + properties +
-                ", lastUpdate=" + lastUpdate +
-                ", isN=" + isN +
-                '}';
+        return "DataBean{id = " + id +
+                ", deviceId = " + deviceId +
+                ", guid = " + guid +
+                ", account = " + account +
+                ", appId = " + appId +
+                ", appVersion = " + appVersion +
+                ", carrier = " + carrier +
+                ", deviceType = " + deviceType +
+                ", eventId = " + eventId +
+                ", ip = " + ip +
+                ", latitude = " + latitude +
+                ", longitude = " + longitude +
+                ", netType = " + netType +
+                ", osName = " + osName +
+                ", osVersion = " + osVersion +
+                ", releaseChannel = " + releaseChannel +
+                ", resolution = " + resolution +
+                ", sessionId = " + sessionId +
+                ", timestamp = " + timestamp +
+                ", newSessionId = " + newSessionId +
+                ", country = " + country +
+                ", province = " + province +
+                ", city = " + city +
+                ", region = " + region +
+                ", date = " + date +
+                ", hour = " + hour +
+                ", properties = " + properties +
+                ", lastUpdate = " + lastUpdate +
+                ", isNew = " + isNew +
+                ", isN = " + isN + "}";
     }
 }

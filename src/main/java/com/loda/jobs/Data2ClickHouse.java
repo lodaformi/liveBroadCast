@@ -15,6 +15,8 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +34,7 @@ public class Data2ClickHouse {
 
         SingleOutputStreamOperator<DataBean> beanStream = kafkaStream.process(new Json2DataBeanV2());
 
+        //使用高德地图AMap将经纬度信息转换为地理位置（逆地理转换）
         String url = FlinkUtil.parameterTool.getRequired("amap.http.url");
         String key = FlinkUtil.parameterTool.getRequired("amap.key");
 
@@ -44,6 +47,8 @@ public class Data2ClickHouse {
             public DataBean map(DataBean bean) throws Exception {
                 Long timestamp = bean.getTimestamp();
 //                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HH");
+//                LocalDateTime dateTime = LocalDateTime.ofEpochSecond(timestamp, 0, ZoneOffset.UTC);
+
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HH");
                 String format = dateFormat.format(new Date(timestamp));
                 String[] split = format.split("-");
