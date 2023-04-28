@@ -57,14 +57,15 @@ public class FlinkUtil {
 
         env.enableCheckpointing(ckptInterval, CheckpointingMode.EXACTLY_ONCE);
 //        env.setStateBackend(new FsStateBackend(ckptPath));
-        env.setStateBackend(new RocksDBStateBackend(ckptPath,true));
+        env.setStateBackend(new RocksDBStateBackend(ckptPath, true));
+//        env.setStateBackend(new embed)
         env.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
 
         List<String> topics = Arrays.asList(parameterTool.get("kafka.input.topics").split(","));
 
         Properties properties = parameterTool.getProperties();
 
-        System.out.println(properties.toString());
+//        System.out.println(properties.toString());
 
         FlinkKafkaConsumer<T> kafkaConsumer = new FlinkKafkaConsumer<>(topics, deserialization.newInstance(), properties);
         kafkaConsumer.setCommitOffsetsOnCheckpoints(false);

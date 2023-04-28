@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @Description TODO(一句话描述该类的功能)
  * @Version 1.0
  */
-public class Data2ClickHouse {
+public class Hello03Data2ClickHouse {
     public static void main(String[] args) throws Exception {
 
         DataStream<Tuple2<String, String>> kafkaStream = FlinkUtil.createKafkaStreamV2(args[0], MyKafkaDeserializationSchema.class);
@@ -57,7 +57,7 @@ public class Data2ClickHouse {
                 return bean;
             }
         }).addSink(JdbcSink.sink(
-                "insert into loda.tb_user_eventvalues (?,?,?,?,?,?,?,?,?,?,?,?)",
+                "insert into loda.tb_user_event values (?,?,?,?,?,?,?,?,?,?,?,?)",
                 (ps, t) -> {
                     ps.setString(1, t.getId());
                     ps.setString(2, t.getDeviceId());
