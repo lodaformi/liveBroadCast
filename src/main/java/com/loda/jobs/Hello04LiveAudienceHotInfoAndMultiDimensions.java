@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  * @Description TODO(一句话描述该类的功能)
  * @Version 1.0
  */
-public class Hello04LiveAudienceCount02 {
+public class Hello04LiveAudienceHotInfoAndMultiDimensions {
     public static void main(String[] args) throws Exception {
         FlinkUtil.env.setParallelism(1);
         //kafka source
@@ -63,8 +63,7 @@ public class Hello04LiveAudienceCount02 {
         Hello04LiveAudienceProcessFuntionTimer processFuntionTimer = new Hello04LiveAudienceProcessFuntionTimer();
         SingleOutputStreamOperator<DataBean> process = anchorStream.process(processFuntionTimer);
 
-        //侧输出到redis
-//        process.getSideOutput(processFuntionTimer.getAggOutputTag()).print("++++++++");
+        //侧输出到redis，用于观察实时和累计数据，可把数据投放到大屏上
         //redis配置
         FlinkJedisPoolConfig node02Redis = new FlinkJedisPoolConfig.Builder()
                 .setHost("node02")
@@ -75,7 +74,7 @@ public class Hello04LiveAudienceCount02 {
         process.getSideOutput(processFuntionTimer.getAggOutputTag())
                 .addSink(new RedisSink<>(node02Redis, new AudienceCountMapper()));
 
-        //        //主流输出到ClickHouse
+        //        //主流输出到ClickHouse，主要用于多维分析
 //        process.print("=======");
 
         /**

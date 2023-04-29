@@ -66,8 +66,7 @@ public class Hello04LiveAudienceProcessFuntionTimer extends KeyedProcessFunction
 
     //优化点：
     // 状态太多，设置状态的TTL
-    // 使用定时器
-    // 将在线人数的数据放到侧输出
+    // 使用定时器，将统计的信息（key_date,uv,pv,onlineUser组成的元组）每10S放到侧输出
 
     //统计pv，进入直播间，计数+1
     //统计累计观众uv，使用bloomFilter对用户（deviceId）进行过滤
@@ -88,7 +87,7 @@ public class Hello04LiveAudienceProcessFuntionTimer extends KeyedProcessFunction
         //记录当前时间
         long currentProcessingTime = ctx.timerService().currentProcessingTime();
         //当前时间+10s为触发器生效的时间，在10S之内的数据都会被计算到，不管数据是10S内的那个时间达到的
-        long fireTime = currentProcessingTime - currentProcessingTime % 100 + 100;
+        long fireTime = currentProcessingTime - currentProcessingTime % 10000 + 10000;
         //注册时间触发器
         ctx.timerService().registerProcessingTimeTimer(fireTime);
 
