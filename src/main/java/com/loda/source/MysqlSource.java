@@ -15,7 +15,7 @@ import java.sql.*;
  */
 public class MysqlSource extends RichSourceFunction<Tuple4<Integer, String, Double, Integer>> {
     private Connection connection = null;
-    PreparedStatement preparedStatement = null;
+    private PreparedStatement preparedStatement = null;
     private Boolean flag = true;
 
     @Override

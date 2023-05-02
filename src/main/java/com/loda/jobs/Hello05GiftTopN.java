@@ -59,7 +59,8 @@ public class Hello05GiftTopN {
 
         //增量聚合
         //eventId，categoryId，商品ID，次数、窗口开始时间，窗口结束时间
-        SingleOutputStreamOperator<ItemEventCount> aggregate = window.aggregate(new Hello05GiftTopNAggregationFunction(), new Hello05GiftTopNWindowFunction());
+        SingleOutputStreamOperator<ItemEventCount> aggregate = window.aggregate(new Hello05GiftTopNAggregationFunction(),
+                new Hello05GiftTopNWindowFunction());
 
         //接下来排序
         //将分类ID、事件ID，同一个窗口的数据分到一个分组中
