@@ -20,10 +20,10 @@ public class Hello06OrderLeftJoinFunction implements CoGroupFunction<OrderDetail
         for (OrderDetail orderDetail : orderDetails) {
             boolean isJoined = false;
             for (OrderMain orderMain : orderMains) {
-                if (orderMain != null) {
+//                if (orderMain != null) {
                     isJoined = true;
                     out.collect(Tuple2.of(orderDetail, orderMain));
-                }
+//                }
             }
             if (!isJoined) {
                 out.collect(Tuple2.of(orderDetail, null));
