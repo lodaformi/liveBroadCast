@@ -58,15 +58,17 @@ public class Hello05GiftsCount {
         //检查数据是否正常读取
 //        mysqlSource.print();
 
-        //将mysql中数据放到状态中，类型为什么是这样？
+        //将mysql中数据放到mapState状态中，key为礼物id，value为礼物的name，points和是否删除deleted
         MapStateDescriptor<Integer, Tuple2<String, Double>> mapStateDescriptor =
                 new MapStateDescriptor<>("gift_broadcast-state", Types.INT, TypeInformation.of(new TypeHint<Tuple2<String, Double>>() {}));
         //广播
         BroadcastStream<Tuple4<Integer, String, Double, Integer>> broadcastStream = mysqlSource.broadcast(mapStateDescriptor);
 
         //获取kafka中的数据
+        //将kafka的topic/partition/offset组合成唯一id
         DataStream<Tuple2<String, String>> kafkaStream = FlinkUtil.createKafkaStreamV2(args[0], MyKafkaDeserializationSchema.class);
         SingleOutputStreamOperator<DataBean> beanStream = kafkaStream.process(new Json2DataBeanV2());
+        //过滤出直播中的礼物数据
         SingleOutputStreamOperator<DataBean> liveRewardStream = beanStream.filter(bean -> "liveReward".equals(bean.getEventId()));
 
         //数据流合并，处理

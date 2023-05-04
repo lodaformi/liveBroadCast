@@ -29,6 +29,8 @@ import java.time.Duration;
  * @Date 2023/5/1 16:00
  * @Description TODO(一句话描述该类的功能)
  * @Version 1.0
+ * 双流匹配
+ * （左表）orderdetail coGroup （右表）ordermain
  */
 public class Hello06OrderCount {
     public static void main(String[] args) throws Exception {
@@ -76,7 +78,7 @@ public class Hello06OrderCount {
         //数据迟到解决方法
         //解决方法一：修改源码（效率高）
         //解决方法二：两个窗口，前一个窗口获取迟到数据，后一个窗口做join（窗口的长度和窗口类型与后面join的一致）
-        //如果订单明细数据，进入前面的窗口内迟到了，那也说明进入后面的窗口肯定也会迟到,将迟到的数据放到orderDetailOutputTag中
+        //如果订单明细数据，进入前面的窗口内迟到了，那也说明进入后面的窗口肯定也会迟到，将迟到的数据放到orderDetailOutputTag中
         SingleOutputStreamOperator<OrderDetail> orderDetailWindowStream = orderDetailWithWaterMark.keyBy(bean -> bean.getOrder_id())
                 .window(TumblingEventTimeWindows.of(Time.seconds(5)))
                 .sideOutputLateData(orderDetailOutputTag)

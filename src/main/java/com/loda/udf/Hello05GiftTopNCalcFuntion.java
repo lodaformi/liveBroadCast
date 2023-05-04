@@ -29,10 +29,6 @@ public class Hello05GiftTopNCalcFuntion extends KeyedProcessFunction<Tuple4<Stri
         listValueState = getRuntimeContext().getState(listValueStateDescriptor);
     }
 
-
-
-
-
     @Override
     public void processElement(ItemEventCount value, KeyedProcessFunction<Tuple4<String, String, Long, Long>, ItemEventCount, List<ItemEventCount>>.Context ctx, Collector<List<ItemEventCount>> out) throws Exception {
         List<ItemEventCount> lst = listValueState.value();

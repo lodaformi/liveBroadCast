@@ -33,7 +33,7 @@ public class Hello04LiveAudienceProcessFuntionTimer extends KeyedProcessFunction
 
     private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMdd-HH");
 
-    //在线观众使用侧输出
+    //在线观众使用侧输出，Tuple4(直播间_date,uv,pv,onlineUser)
     private OutputTag<Tuple4<String, Integer, Integer, Integer>> aggOutputTag =
             new OutputTag("anchorId-uv-pv-onlineUser", Types.TUPLE(Types.STRING, Types.INT, Types.INT, Types.INT)) {};
 
@@ -66,7 +66,7 @@ public class Hello04LiveAudienceProcessFuntionTimer extends KeyedProcessFunction
 
     //优化点：
     // 状态太多，设置状态的TTL
-    // 使用定时器，将统计的信息（key_date,uv,pv,onlineUser组成的元组）每10S放到侧输出
+    // 使用定时器，将统计的信息（直播间_date,uv,pv,onlineUser组成的元组）每10S放到侧输出
 
     //统计pv，进入直播间，计数+1
     //统计累计观众uv，使用bloomFilter对用户（deviceId）进行过滤

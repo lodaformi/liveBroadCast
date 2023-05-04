@@ -32,7 +32,7 @@ import java.util.List;
  * @Description TODO(一句话描述该类的功能)
  * @Version 1.0
  */
-public class Hello05GiftTopN {
+public class Hello05ProductTopN {
     public static void main(String[] args) throws Exception {
         //获取kafka中的数据
         DataStream<Tuple2<String, String>> kafkaStream = FlinkUtil.createKafkaStreamV2(args[0], MyKafkaDeserializationSchema.class);
@@ -55,7 +55,8 @@ public class Hello05GiftTopN {
                 });
 
         //划分窗口
-        WindowedStream<DataBean, Tuple3<String, String, String>, TimeWindow> window = dataBeanTuple3KeyedStream.window(SlidingEventTimeWindows.of(Time.minutes(10), Time.minutes(1)));
+        WindowedStream<DataBean, Tuple3<String, String, String>, TimeWindow> window =
+                dataBeanTuple3KeyedStream.window(SlidingEventTimeWindows.of(Time.minutes(10), Time.minutes(1)));
 
         //增量聚合
         //eventId，categoryId，商品ID，次数、窗口开始时间，窗口结束时间

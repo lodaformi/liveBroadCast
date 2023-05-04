@@ -29,6 +29,7 @@ import java.nio.charset.StandardCharsets;
  * @Date 2023/4/28 14:47
  * @Description TODO(一句话描述该类的功能)
  * @Version 1.0
+ * 统计主播或者直播间累计访问人数uv，累计pv，实时在线人数
  */
 public class Hello04LiveAudienceCount {
     public static void main(String[] args) throws Exception {

@@ -31,6 +31,8 @@ import java.util.concurrent.TimeUnit;
  * @Date 2023/4/28 14:47
  * @Description TODO(一句话描述该类的功能)
  * @Version 1.0
+ * 使用定时器每10s统计直播间的累计uv，pv和在线实时人数，并侧流输出，写入到redis
+ * 主流写入到clickhouse
  */
 public class Hello04LiveAudienceHotInfoAndMultiDimensions {
     public static void main(String[] args) throws Exception {
