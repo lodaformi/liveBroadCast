@@ -37,7 +37,7 @@ public class Hello06OrderCount {
         FlinkUtil.env.setParallelism(1);
         ParameterTool parameterTool = ParameterTool.fromPropertiesFile(args[0]);
 
-        //从kafka对应主题中读取数据
+        //canal采集数据到kafka，flink从kafka对应主题中读取数据
         String ordermainTopic = parameterTool.getRequired("kafka.input.main");
         DataStream<String> ordermainStream = FlinkUtil.createKafkaStream(parameterTool, ordermainTopic, SimpleStringSchema.class);
 

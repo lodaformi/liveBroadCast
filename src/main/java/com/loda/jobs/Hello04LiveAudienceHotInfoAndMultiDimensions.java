@@ -38,6 +38,7 @@ public class Hello04LiveAudienceHotInfoAndMultiDimensions {
     public static void main(String[] args) throws Exception {
         FlinkUtil.env.setParallelism(1);
         //kafka source
+        //用kafka的topic/partition/offset组成id，主流存放到clickhouse中用于后续查找最新数据
         DataStream<Tuple2<String, String>> kafkaStream = FlinkUtil.createKafkaStreamV2(args[0], MyKafkaDeserializationSchema.class);
 
         SingleOutputStreamOperator<DataBean> dataBeanStream = kafkaStream.process(new Json2DataBeanV2());
