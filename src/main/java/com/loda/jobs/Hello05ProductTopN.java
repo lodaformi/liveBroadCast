@@ -38,12 +38,14 @@ public class Hello05ProductTopN {
         DataStream<Tuple2<String, String>> kafkaStream = FlinkUtil.createKafkaStreamV2(args[0], MyKafkaDeserializationSchema.class);
         SingleOutputStreamOperator<DataBean> beanStream = kafkaStream.process(new Json2DataBeanV2());
 
-        //过滤和商品有关的事件（productView（浏览）、productAddCart：（加入购物车）、productOrder（下单））
+        //过滤和商品有关的事件（productView（浏览）、productAddCart（加入购物车）、productOrder（下单））
         SingleOutputStreamOperator<DataBean> productStream = beanStream.filter(bean -> bean.getEventId().startsWith("product"));
 
+        //定义水位线和事件时间字段
         SingleOutputStreamOperator<DataBean> beanWithWaterMark = productStream.assignTimestampsAndWatermarks(WatermarkStrategy.<DataBean>forBoundedOutOfOrderness(Duration.ofSeconds(5))
                 .withTimestampAssigner((bean, recordTimestamp) -> bean.getTimestamp()));
 
+        //以eventId、categoryId、productId三元组keyby
         KeyedStream<DataBean, Tuple3<String, String, String>> dataBeanTuple3KeyedStream =
                 beanWithWaterMark.keyBy(new KeySelector<DataBean, Tuple3<String, String, String>>() {
                     @Override
@@ -54,12 +56,12 @@ public class Hello05ProductTopN {
                     }
                 });
 
-        //划分窗口
+        //使用滑动窗口，窗口大小10分钟，每1分钟滑动1次
         WindowedStream<DataBean, Tuple3<String, String, String>, TimeWindow> window =
                 dataBeanTuple3KeyedStream.window(SlidingEventTimeWindows.of(Time.minutes(10), Time.minutes(1)));
 
-        //增量聚合
-        //eventId，categoryId，商品ID，次数、窗口开始时间，窗口结束时间
+        // 增量聚合，一个商品来了计数+1，
+        // 随后获取eventId，categoryId，商品ID，商品在窗口时间内的次数、窗口开始时间，窗口结束时间，使用ItemEventCount进行包装返回
         SingleOutputStreamOperator<ItemEventCount> aggregate = window.aggregate(new Hello05GiftTopNAggregationFunction(),
                 new Hello05GiftTopNWindowFunction());
 
@@ -67,11 +69,12 @@ public class Hello05ProductTopN {
         //将分类ID、事件ID，同一个窗口的数据分到一个分组中
         KeyedStream<ItemEventCount, Tuple4<String, String, Long, Long>> keyedStream = aggregate.keyBy(new KeySelector<ItemEventCount, Tuple4<String, String, Long, Long>>() {
             @Override
-            public Tuple4<String, String, Long, Long> getKey(ItemEventCount value) throws Exception {
-                return Tuple4.of(value.categoryId, value.eventId, value.windowStart, value.windowEnd);
+            public Tuple4<String, String, Long, Long> getKey(ItemEventCount bean) throws Exception {
+                return Tuple4.of(bean.categoryId, bean.eventId, bean.windowStart, bean.windowEnd);
             }
         });
 
+        //将同一个窗口中的商品都添加到一个List<ItemEventCount>中，借助List自带的sort逆序排序，取前三（如果有），返回List<ItemEventCount>
         SingleOutputStreamOperator<List<ItemEventCount>> res = keyedStream.process(new Hello05GiftTopNCalcFuntion());
 
         res.print("++++++++++++++");

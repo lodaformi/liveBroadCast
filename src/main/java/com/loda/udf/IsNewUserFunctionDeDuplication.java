@@ -32,6 +32,7 @@ public class IsNewUserFunctionDeDuplication extends RichMapFunction<DataBean, Da
                 new ListStateDescriptor("deviceId-bloomFilter-list", TypeInformation.of(new TypeHint<BloomFilter<String>>() {}));
         listState = context.getOperatorStateStore().getListState(listStateDescriptor);
 
+        //初始化布隆过滤器，从列表中拿到布隆过滤器
         if (context.isRestored()){
             for (BloomFilter<String> filter : listState.get()) {
                 this.bloomFilter = filter;
@@ -54,6 +55,7 @@ public class IsNewUserFunctionDeDuplication extends RichMapFunction<DataBean, Da
         return bean;
     }
 
+    //更新布隆过滤器
     @Override
     public void snapshotState(FunctionSnapshotContext context) throws Exception {
         listState.update(Collections.singletonList(bloomFilter));

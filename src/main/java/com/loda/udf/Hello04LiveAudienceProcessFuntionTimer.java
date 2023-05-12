@@ -135,6 +135,7 @@ public class Hello04LiveAudienceProcessFuntionTimer extends KeyedProcessFunction
         String dateHour = dateTimeFormatter.format(timestamp);
         String[] dataHourArr = dateHour.split("-");
 
+        //侧输出到outputTag
         ctx.output(aggOutputTag,
                 Tuple4.of(ctx.getCurrentKey() + "_" + dataHourArr[0],
                         uvState.value(),

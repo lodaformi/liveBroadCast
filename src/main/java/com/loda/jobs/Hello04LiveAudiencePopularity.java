@@ -92,7 +92,7 @@ public class Hello04LiveAudiencePopularity {
                     out.collect(Tuple2.of(ctx.getCurrentKey().f0, 1));
                 } else {
                     Long inTime = inState.value();
-                    //本次登录时间减上次退出时间
+                    //本次登录时间减上次退出时间，判断逻辑上不完整，还需想想怎么完善 TODO
                     if (inTime - outTime > 30 * 60000) {
                         out.collect(Tuple2.of(ctx.getCurrentKey().f0, 1));
                     }

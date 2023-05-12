@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
  * @Version 1.0
  */
 
-//题解：统计每个省份的新老用户，按设备类型分组，并对设备id进行去重
-//优化点：一个taskSlot一个bloomFilter
+//题目：统计每个省份的新老用户，按设备类型分组，并对设备id进行去重
+//优化点：使用算子state，一个taskSlot一个bloomFilter
 public class UserCount4 {
     public static void main(String[] args) throws Exception {
         //kafkaStream
@@ -42,10 +42,12 @@ public class UserCount4 {
 //        String key = FlinkUtil.parameterTool.getRequired("amap.key");
 //        SingleOutputStreamOperator<DataBean> dataBeanWithLocation = AsyncDataStream.unorderedWait(filtered, new LocationFunction(url, key, 50), 5, TimeUnit.SECONDS);
 
+        //使用算子state，一个并行度共享算子state，节省内存
+        //extends RichMapFunction<DataBean, DataBean> implements CheckpointedFunction
+        //initializeState中创建布隆过滤器，在map中判断数据是否存在布隆过滤器中，在snapshotState中更新布隆过滤器
         filtered.keyBy(DataBean::getDeviceId)
                 .map(new IsNewUserFunctionDeDuplication())
                 .print();
-
 
         //env exec
         FlinkUtil.env.execute();

@@ -22,10 +22,12 @@ import java.util.List;
  */
 public class Hello05GiftTopNCalcFuntion extends KeyedProcessFunction<Tuple4<String, String, Long, Long>, ItemEventCount, List<ItemEventCount>> {
     private transient ValueState<List<ItemEventCount>> listValueState;
+
     @Override
     public void open(Configuration parameters) throws Exception {
         ValueStateDescriptor<List<ItemEventCount>> listValueStateDescriptor =
-                new ValueStateDescriptor<>("item-list-state", TypeInformation.of(new TypeHint<List<ItemEventCount>>() {}));
+                new ValueStateDescriptor<>("item-list-state", TypeInformation.of(new TypeHint<List<ItemEventCount>>() {
+                }));
         listValueState = getRuntimeContext().getState(listValueStateDescriptor);
     }
 
@@ -33,7 +35,7 @@ public class Hello05GiftTopNCalcFuntion extends KeyedProcessFunction<Tuple4<Stri
     public void processElement(ItemEventCount value, KeyedProcessFunction<Tuple4<String, String, Long, Long>, ItemEventCount, List<ItemEventCount>>.Context ctx, Collector<List<ItemEventCount>> out) throws Exception {
         List<ItemEventCount> lst = listValueState.value();
         if (lst == null) {
-            lst =new ArrayList<>();
+            lst = new ArrayList<>();
         }
         lst.add(value);
         listValueState.update(lst);
@@ -48,7 +50,7 @@ public class Hello05GiftTopNCalcFuntion extends KeyedProcessFunction<Tuple4<Stri
         //排序
         List<ItemEventCount> lst = listValueState.value();
 
-        lst.sort(( o1,  o2)-> Long.compare(o2.count, o1.count));
+        lst.sort((o1, o2) -> Long.compare(o2.count, o1.count));
 
         ArrayList<ItemEventCount> sortedList = new ArrayList<>();
         for (int i = 0; i < Math.min(3, lst.size()); i++) {

@@ -33,17 +33,21 @@ public class UserCount2 {
         String url = FlinkUtil.parameterTool.getRequired("amap.http.url");
         String key = FlinkUtil.parameterTool.getRequired("amap.key");
 
+        //使用高德AMap逆地理编码，异步将经纬度解析为省市
         SingleOutputStreamOperator<DataBean> dataBeanWithLocation = AsyncDataStream.unorderedWait(
                 filtered, new LocationFunction(url, key, 50), 5, TimeUnit.SECONDS
         );
-//        dataBeanWithLocation.print();
+        //dataBeanWithLocation.print();
 
+        //每个省，新老用户，出现次数为1
         SingleOutputStreamOperator<Tuple3<String, Integer, Integer>> locationUser = dataBeanWithLocation.map(new MapFunction<DataBean, Tuple3<String, Integer, Integer>>() {
             @Override
             public Tuple3<String, Integer, Integer> map(DataBean bean) throws Exception {
                 return Tuple3.of(bean.getProvince(), bean.getIsNew(), 1);
             }
-        }).keyBy(new KeySelector<Tuple3<String, Integer, Integer>, Tuple2<String, Integer>>() {
+        })
+        //按照省份和新老用户keyby，统计每个省新用户数量，老用户数量
+        .keyBy(new KeySelector<Tuple3<String, Integer, Integer>, Tuple2<String, Integer>>() {
             @Override
             public Tuple2<String, Integer> getKey(Tuple3<String, Integer, Integer> value) throws Exception {
                 return Tuple2.of(value.f0, value.f1);

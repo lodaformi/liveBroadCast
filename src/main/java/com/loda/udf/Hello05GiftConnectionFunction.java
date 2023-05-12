@@ -24,13 +24,13 @@ public class Hello05GiftConnectionFunction extends BroadcastProcessFunction<Data
     }
 
     @Override
-    public void processElement(DataBean value, BroadcastProcessFunction<DataBean, Tuple4<Integer, String, Double, Integer>, Tuple3<String, String, Double>>.ReadOnlyContext ctx,
+    public void processElement(DataBean bean, BroadcastProcessFunction<DataBean, Tuple4<Integer, String, Double, Integer>, Tuple3<String, String, Double>>.ReadOnlyContext ctx,
                                Collector<Tuple3<String, String, Double>> out) throws Exception {
 
         ReadOnlyBroadcastState<Integer, Tuple2<String, Double>> broadcastState = ctx.getBroadcastState(mapStateDescriptor);
 
-        String anchor_id = value.getProperties().get("anchor_id").toString();
-        Integer gift_id = Integer.parseInt(value.getProperties().get("gift_id").toString());
+        String anchor_id = bean.getProperties().get("anchor_id").toString();
+        Integer gift_id = Integer.parseInt(bean.getProperties().get("gift_id").toString());
 
         //双流match
         Tuple2<String, Double> giftTP = broadcastState.get(gift_id);

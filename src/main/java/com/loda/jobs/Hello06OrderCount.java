@@ -37,16 +37,17 @@ public class Hello06OrderCount {
         FlinkUtil.env.setParallelism(1);
         ParameterTool parameterTool = ParameterTool.fromPropertiesFile(args[0]);
 
-        //canal采集数据到kafka，flink从kafka对应主题中读取数据
+        //canal采集main数据到kafka，flink从kafka对应main主题中读取数据
         String ordermainTopic = parameterTool.getRequired("kafka.input.main");
         DataStream<String> ordermainStream = FlinkUtil.createKafkaStream(parameterTool, ordermainTopic, SimpleStringSchema.class);
 
         //将数据转换为javaBean
         SingleOutputStreamOperator<OrderMain> orderMainBeanStream = ordermainStream.process(new Hello06Json2OrderMain());
 
-        //从kafka对应主题中读取数据
+        //canal采集detail数据到kafka，flink从kafka对应detail主题中读取数据
         String orderdetailTopic = parameterTool.getRequired("kafka.input.detail");
         DataStream<String> orderdetailStream = FlinkUtil.createKafkaStream(parameterTool, orderdetailTopic, SimpleStringSchema.class);
+
         //将数据转换为javaBean
         SingleOutputStreamOperator<OrderDetail> orderDetailBeanStream = orderdetailStream.process(new Hello06Json2OrderDetail());
 

@@ -134,8 +134,7 @@ public class Hello04LiveAudienceHotInfoAndMultiDimensions {
     }
 
     public static class AudienceCountMapper implements RedisMapper<Tuple4<String, Integer, Integer, Integer>> {
-
-        //使用hashset数据结构，如果key不存在，新建
+        // 使用hashset数据结构，如果key不存在，新建
         // 如果key存在，新来的value值覆盖旧值
         @Override
         public RedisCommandDescription getCommandDescription() {

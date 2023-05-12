@@ -12,7 +12,7 @@ import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.util.Collector;
 
 
-public class IsNewUserFunction extends KeyedProcessFunction<String, DataBean,DataBean> {
+public class IsNewUserFunction extends KeyedProcessFunction<String, DataBean, DataBean> {
     private transient ValueState<BloomFilter<String>> bloomFilterState;
 
     @Override
