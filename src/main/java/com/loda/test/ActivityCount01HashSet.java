@@ -67,7 +67,9 @@ public class ActivityCount01HashSet {
                 return Tuple2.of(value.f1, value.f2);
             }
         }).process(new KeyedProcessFunction<Tuple2<String, String>, Tuple3<String, String, String>, Tuple4<String, String, Integer, Integer>>() {
+            //用户判断用户的是否存在
             private transient ValueState<HashSet<String>> uidState;
+            //用户统计用户的数量
             private transient ValueState<Integer> uidCountState;
 
             @Override

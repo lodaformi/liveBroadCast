@@ -2,6 +2,8 @@ package com.loda.udf;
 
 import com.loda.pojo.DataBean;
 import org.apache.flink.api.common.functions.AggregateFunction;
+import org.apache.flink.api.common.functions.RichAggregateFunction;
+import org.apache.flink.api.common.functions.RichMapFunction;
 
 /**
  * @Author loda
@@ -15,11 +17,13 @@ public class Hello05GiftTopNAggregationFunction implements AggregateFunction<Dat
         return 0L;
     }
 
+    //来一条执行一条
     @Override
     public Long add(DataBean value, Long accumulator) {
         return accumulator+1;
     }
 
+    //窗口触发时执行
     @Override
     public Long getResult(Long accumulator) {
         return accumulator;
@@ -29,4 +33,5 @@ public class Hello05GiftTopNAggregationFunction implements AggregateFunction<Dat
     public Long merge(Long a, Long b) {
         return null;
     }
+
 }

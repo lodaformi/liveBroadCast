@@ -32,7 +32,7 @@ public class Hello04LiveAudienceProcessFunction extends KeyedProcessFunction<Str
     public void open(Configuration parameters) throws Exception {
         //设置状态的TTL
         StateTtlConfig ttlConfig = StateTtlConfig.newBuilder(Time.hours(6))
-                .setUpdateType(StateTtlConfig.UpdateType.OnCreateAndWrite)
+                .setUpdateType(StateTtlConfig.UpdateType.OnCreateAndWrite)  //创建和写的时候重置TTL时间
                 .build();
 
         //4个状态
@@ -94,7 +94,12 @@ public class Hello04LiveAudienceProcessFunction extends KeyedProcessFunction<Str
             pvState.update(++pv);
         }else {
             //当观众退出直播间
-            onlineUserstate.update(--onlineUser);
+            --onlineUser;
+            //数据乱序可能导致onlineUser出现负数，这里是数据安全性判断
+            if (onlineUser < 0) {
+                onlineUser = 0;
+            }
+            onlineUserstate.update(onlineUser);
         }
 
         out.collect(Tuple4.of(ctx.getCurrentKey(), uv, pv, onlineUser));

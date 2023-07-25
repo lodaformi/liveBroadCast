@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
  * @Version 1.0
  */
 //用kafka的topic/partition/offset组成id，
-    //byte[]字节数组转成字符串，后续把字符串转成javaBean
+//byte[]字节数组转成字符串，后续把字符串转成javaBean
 public class MyKafkaDeserializationSchema implements KafkaDeserializationSchema<Tuple2<String, String>> {
     @Override
     public boolean isEndOfStream(Tuple2<String, String> nextElement) {

@@ -40,7 +40,7 @@ public class Hello05GiftTopNCalcFuntion extends KeyedProcessFunction<Tuple4<Stri
         lst.add(value);
         listValueState.update(lst);
 
-        //注册定时器
+        //使用事件时间注册定时器
         ctx.timerService().registerEventTimeTimer(value.windowEnd + 1);
     }
 

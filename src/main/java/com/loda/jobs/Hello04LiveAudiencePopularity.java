@@ -102,7 +102,6 @@ public class Hello04LiveAudiencePopularity {
         
         popularity.keyBy(value -> value.f0).sum(1).print("+++++++++++++++++");
 
-
         //env exec
         FlinkUtil.env.execute();
     }

@@ -66,6 +66,16 @@ public class DataBean {
     //是不是新用户，如果为1为新用户，如果为0为老用户
     private int isN;
 
+    private int perCnt;
+
+    public int getPerCnt() {
+        return perCnt;
+    }
+
+    public void setPerCnt(int perCnt) {
+        this.perCnt = perCnt;
+    }
+
     public DataBean() {
     }
 
@@ -373,6 +383,8 @@ public class DataBean {
                 ", properties = " + properties +
                 ", lastUpdate = " + lastUpdate +
                 ", isNew = " + isNew +
-                ", isN = " + isN + "}";
+                ", isN = " + isN +
+                ", perCnt = " + perCnt +
+                "}";
     }
 }

@@ -29,13 +29,13 @@ public class UserCount {
         SingleOutputStreamOperator<DataBean> dataStream = kafkaStream.process(new Json2DataBean());
 
         SingleOutputStreamOperator<DataBean> filtered = dataStream.filter(bean -> EventID.APP_LAUNCH.equals(bean.getEventId()));
-        //此处是按照设备类型来区分新旧用户，做了简化，先理解思路。
+        // 此处是按照设备类型来区分新旧用户，做了简化，先理解思路。
         // 不是太合理，无法识别一个设备上的多个用户，同一个用户更换了设备被识别为多个用户的情况
         // 严谨点的可以生产全局唯一id
         // 设备类型，是否是新用户，出现次数为1
         SingleOutputStreamOperator<Tuple3<String, Integer, Integer>> keyData = filtered.map(bean -> Tuple3.of(bean.getDeviceType(), bean.getIsNew(), 1),
                 Types.TUPLE(Types.STRING, Types.INT, Types.INT));
-        //keyData.print();
+        // keyData.print();
         // (MEIZU-ML6,1,1)
         // (IPHONE-10,0,1)
 

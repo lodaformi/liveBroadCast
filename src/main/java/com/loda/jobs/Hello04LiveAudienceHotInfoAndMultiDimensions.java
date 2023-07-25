@@ -53,7 +53,9 @@ public class Hello04LiveAudienceHotInfoAndMultiDimensions {
         SingleOutputStreamOperator<DataBean> liveStream = locationStream.filter(bean -> bean.getEventId().startsWith("live"));
 //        liveStream.print();
 
-        SingleOutputStreamOperator<DataBean> enterOrLeaveStream = liveStream.filter(bean -> "liveEnter".equals(bean.getEventId()) || "liveLeave".equals(bean.getEventId()));
+        SingleOutputStreamOperator<DataBean> enterOrLeaveStream = liveStream
+                .filter(bean -> "liveEnter".equals(bean.getEventId()) || "liveLeave".equals(bean.getEventId()))
+                .name("").uid("");
 //        enterOrLeaveStream.print();
 
         KeyedStream<DataBean, String> anchorStream = enterOrLeaveStream.keyBy(bean -> bean.getProperties().get("anchor_id").toString());

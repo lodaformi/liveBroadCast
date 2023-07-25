@@ -7,8 +7,12 @@ import com.loda.pojo.DataBean;
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.common.typeinfo.Types;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.runtime.state.FunctionInitializationContext;
 import org.apache.flink.runtime.state.FunctionSnapshotContext;
 import org.apache.flink.streaming.api.checkpoint.CheckpointedFunction;
@@ -22,9 +26,15 @@ import java.util.Collections;
  * @Version 1.0
  */
 public class IsNewUserFunctionDeDuplication extends RichMapFunction<DataBean, DataBean> implements CheckpointedFunction {
-
     private transient ListState<BloomFilter<String>> listState;
     private transient BloomFilter<String> bloomFilter;
+    private transient ValueState<Integer> perCntState;
+
+    @Override
+    public void open(Configuration parameters) throws Exception {
+        ValueStateDescriptor<Integer> personCntStateDesc = new ValueStateDescriptor<>("personCnt-state", Types.INT);
+        perCntState = getRuntimeContext().getState(personCntStateDesc);
+    }
 
     @Override
     public void initializeState(FunctionInitializationContext context) throws Exception {
@@ -43,6 +53,12 @@ public class IsNewUserFunctionDeDuplication extends RichMapFunction<DataBean, Da
     @Override
     public DataBean map(DataBean bean) throws Exception {
         String deviceId = bean.getDeviceId();
+        Integer perCnt = perCntState.value();
+
+        if (perCnt == null) {
+            perCnt = 0;
+        }
+
         //判断过滤器是否存在
         if (bloomFilter == null) {
             bloomFilter = BloomFilter.create(Funnels.unencodedCharsFunnel(), 10000);
@@ -51,6 +67,9 @@ public class IsNewUserFunctionDeDuplication extends RichMapFunction<DataBean, Da
         if (!bloomFilter.mightContain(deviceId)) {
             bloomFilter.put(deviceId);
             bean.setIsN(1);
+            perCnt++;
+            bean.setPerCnt(perCnt);
+            perCntState.update(perCnt);
         }
         return bean;
     }

@@ -88,7 +88,7 @@ public class Hello04LiveAudienceProcessFuntionTimer extends KeyedProcessFunction
         long currentProcessingTime = ctx.timerService().currentProcessingTime();
         //当前时间+10s为触发器生效的时间，在10S之内的数据都会被计算到，不管数据是10S内的那个时间达到的
         long fireTime = currentProcessingTime - currentProcessingTime % 10000 + 10000;
-        //注册时间触发器
+        //使用处理时间注册时间触发器
         ctx.timerService().registerProcessingTimeTimer(fireTime);
 
         if (onlineUser == null) {
@@ -103,7 +103,7 @@ public class Hello04LiveAudienceProcessFuntionTimer extends KeyedProcessFunction
                 uv = 0;
             }
 
-            //在线用户不能放到bloomFilter中进行判断，因为当用户推出直播间，再次进入时，
+            // 在线用户不能放到bloomFilter中进行判断，因为当用户退出直播间，再次进入时，
             // 在线用户需要+1，但是放到bloomFilter中就会造成用户大概率已经存在，在线用户统计错误的情况
             if (!bloomFilter.mightContain(deviceId)) {
                 bloomFilter.put(deviceId);
@@ -116,7 +116,6 @@ public class Hello04LiveAudienceProcessFuntionTimer extends KeyedProcessFunction
             //当观众退出直播间
             onlineUserstate.update(--onlineUser);
         }
-
 
         String dateHour = dateTimeFormatter.format(bean.getTimestamp());
         String[] dataHourArr = dateHour.split("-");

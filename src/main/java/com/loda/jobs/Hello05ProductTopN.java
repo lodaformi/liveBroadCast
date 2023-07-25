@@ -60,7 +60,8 @@ public class Hello05ProductTopN {
         WindowedStream<DataBean, Tuple3<String, String, String>, TimeWindow> window =
                 dataBeanTuple3KeyedStream.window(SlidingEventTimeWindows.of(Time.minutes(10), Time.minutes(1)));
 
-        // 增量聚合，一个商品来了计数+1，
+        // 这里采用aggregate增量聚合，一个商品来了计数+1，
+        //process是全量聚合
         // 随后获取eventId，categoryId，商品ID，商品在窗口时间内的次数、窗口开始时间，窗口结束时间，使用ItemEventCount进行包装返回
         SingleOutputStreamOperator<ItemEventCount> aggregate = window.aggregate(new Hello05GiftTopNAggregationFunction(),
                 new Hello05GiftTopNWindowFunction());

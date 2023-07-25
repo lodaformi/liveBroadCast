@@ -68,6 +68,7 @@ public class Hello05GiftsCount {
         //将kafka的topic/partition/offset组合成唯一id
         DataStream<Tuple2<String, String>> kafkaStream = FlinkUtil.createKafkaStreamV2(args[0], MyKafkaDeserializationSchema.class);
         SingleOutputStreamOperator<DataBean> beanStream = kafkaStream.process(new Json2DataBeanV2());
+
         //过滤出直播中的礼物数据
         SingleOutputStreamOperator<DataBean> liveRewardStream = beanStream.filter(bean -> "liveReward".equals(bean.getEventId()));
 

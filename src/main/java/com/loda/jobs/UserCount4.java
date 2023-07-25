@@ -45,7 +45,9 @@ public class UserCount4 {
         //使用算子state，一个并行度共享算子state，节省内存
         //extends RichMapFunction<DataBean, DataBean> implements CheckpointedFunction
         //initializeState中创建布隆过滤器，在map中判断数据是否存在布隆过滤器中，在snapshotState中更新布隆过滤器
-        filtered.keyBy(DataBean::getDeviceId)
+
+        //以什么作为键，看业务需求
+        filtered.keyBy(DataBean::getReleaseChannel)
                 .map(new IsNewUserFunctionDeDuplication())
                 .print();
 

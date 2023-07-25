@@ -42,6 +42,8 @@ public class Hello03Data2ClickHouse {
                 beanStream, new LocationFunction(url, key, 50), 5, TimeUnit.SECONDS
         );
 
+
+
         dataBeanWithLocation.map(new MapFunction<DataBean, DataBean>() {
             @Override
             public DataBean map(DataBean bean) throws Exception {
@@ -83,7 +85,6 @@ public class Hello03Data2ClickHouse {
                         .withUsername("default")
                         .withPassword("123456")
                         .build()));
-
 
         FlinkUtil.env.execute();
     }
